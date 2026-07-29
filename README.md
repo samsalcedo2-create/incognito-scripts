@@ -1,0 +1,2 @@
+# incognito-scripts
+popup.js
