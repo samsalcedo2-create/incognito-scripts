@@ -146,9 +146,8 @@
   }
 
   function validarTelefono(val) {
-    // Mínimo 10 dígitos, permite +, espacios, guiones
-    return /^\+?[\d\s\-]{10,20}$/.test(val);
-  }
+  return /[\d]{8,}/.test(val);
+}
 
   // ─── AUTO-FORMATEO CUMPLEAÑOS ─────────────────────────────────────────────
   document.getElementById('popup-cumple').addEventListener('input', function (e) {
