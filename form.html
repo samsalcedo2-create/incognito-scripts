@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cupón 10% OFF — Incognito Indumentaria</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      padding: 24px 16px;
+    }
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 14px;
+      overflow: hidden;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .card img.banner {
+      width: 100%;
+      display: block;
+    }
+    .content {
+      padding: 28px 28px 32px;
+    }
+    h2 {
+      color: #fff;
+      font-size: 19px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      margin: 6px 0;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+    input::placeholder { color: #555; }
+    input:focus { border-color: #e63946; }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 14px;
+      background: #e63946;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #c1121f; }
+    button:disabled { background: #555; cursor: default; }
+    .error {
+      color: #e63946;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+    .success {
+      display: none;
+      padding: 32px 20px;
+    }
+    .success h3 {
+      color: #fff;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .success p {
+      color: #aaa;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .footer {
+      margin-top: 20px;
+      color: #444;
+      font-size: 11px;
+    }
+    .footer a { color: #666; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <img class="banner" src="https://samsalcedo2-create.github.io/incognito-scripts/banner-popup.png" alt="Cupón 10% OFF Incognito" />
+
+    <div class="content">
+
+      <div id="form-section">
+        <h2>Suscribite y llevate tu descuento</h2>
+        <p class="subtitle">Recibí novedades, lanzamientos y promociones por WhatsApp 🖤</p>
+
+        <input type="text"  id="nombre"   placeholder="Tu nombre" />
+        <input type="tel"   id="telefono" placeholder="WhatsApp (ej: +5491112345678)" />
+        <input type="text"  id="cumple"   placeholder="Cumpleaños (DD/MM)" maxlength="5" />
+
+        <button id="btn-enviar">QUIERO MI DESCUENTO</button>
+        <div class="error" id="error-msg"></div>
+      </div>
+
+      <div class="success" id="success-section">
+        <h3>¡Gracias! 🎉</h3>
+        <p>Te enviamos tu cupón de <strong>10% OFF</strong> por WhatsApp en instantes.<br><br>
+        Revisá tus mensajes y usalo en tu próxima compra.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://www.incognitoindumentaria.com.ar">← Volver a la tienda</a>
+  </div>
+
+  <script>
+    var WEBHOOK = 'https://grazia-n8n.eijgnl.easypanel.host/webhook/incognito_popup';
+
+    // Auto-formato cumpleaños
+    document.getElementById('cumple').addEventListener('input', function(e) {
+      var v = e.target.value.replace(/\D/g, '');
+      if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2,4);
+      e.target.value = v;
+    });
+
+    function mostrarError(msg) {
+      var el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function ocultarError() {
+      document.getElementById('error-msg').style.display = 'none';
+    }
+
+    function validarTelefono(v) {
+      return /^\+?[\d\s\-]{10,20}$/.test(v);
+    }
+
+    function validarCumple(v) {
+      if (!v) return true;
+      return /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])$/.test(v);
+    }
+
+    document.getElementById('btn-enviar').addEventListener('click', function() {
+      var nombre   = document.getElementById('nombre').value.trim();
+      var telefono = document.getElementById('telefono').value.trim();
+      var cumple   = document.getElementById('cumple').value.trim();
+
+      ocultarError();
+
+      if (!nombre) { mostrarError('Por favor ingresá tu nombre.'); return; }
+      if (!telefono || !validarTelefono(telefono)) {
+        mostrarError('Ingresá un número de WhatsApp válido (ej: +5491112345678).');
+        return;
+      }
+      if (!validarCumple(cumple)) {
+        mostrarError('El cumpleaños debe tener el formato DD/MM (ej: 15/06).');
+        return;
+      }
+
+      var btn = document.getElementById('btn-enviar');
+      btn.disabled = true;
+      btn.textContent = 'ENVIANDO...';
+
+      fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre:     nombre,
+          telefono:   telefono,
+          cumpleanos: cumple || null,
+          fuente:     'formulario_link'
+        })
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('success-section').style.display = 'block';
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = 'QUIERO MI DESCUENTO';
+        mostrarError('Hubo un error al enviar. Intentá de nuevo.');
+      });
+    });
+  </script>
+
+</body>
+</html>
