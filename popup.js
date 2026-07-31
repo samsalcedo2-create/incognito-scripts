@@ -160,13 +160,26 @@
 
   function mostrarPopup() {
     if (localStorage.getItem('incognito_popup_suscripto')) return;
-    if (sessionStorage.getItem('incognito_popup_cerrado')) return;
+    
+    var bloqueadoHasta = localStorage.getItem('incognito_popup_bloqueado_hasta');
+    if (bloqueadoHasta && Date.now() < parseInt(bloqueadoHasta)) return;
+    
     document.getElementById('incognito-popup-overlay').classList.add('active');
   }
 
   function cerrarPopup() {
     document.getElementById('incognito-popup-overlay').classList.remove('active');
-    sessionStorage.setItem('incognito_popup_cerrado', '1');
+    
+    var veces = parseInt(localStorage.getItem('incognito_popup_cerrado_veces') || '0');
+    veces++;
+    localStorage.setItem('incognito_popup_cerrado_veces', veces);
+    
+    if (veces >= 2) {
+      var siete_dias = Date.now() + 7 * 24 * 60 * 60 * 1000;
+      localStorage.setItem('incognito_popup_bloqueado_hasta', siete_dias);
+    } else {
+      setTimeout(mostrarPopup, 30000);
+    }
   }
 
   setTimeout(mostrarPopup, DELAY_MS);
