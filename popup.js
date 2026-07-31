@@ -178,7 +178,7 @@
       var siete_dias = Date.now() + 7 * 24 * 60 * 60 * 1000;
       localStorage.setItem('incognito_popup_bloqueado_hasta', siete_dias);
     } else {
-      setTimeout(mostrarPopup, 30000);
+      setTimeout(mostrarPopup, 300000);
     }
   }
 
