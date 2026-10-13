@@ -230,7 +230,7 @@
       document.getElementById('incognito-popup-form').style.display = 'none';
       document.getElementById('incognito-popup-success').style.display = 'block';
       localStorage.setItem('incognito_popup_suscripto', '1');
-      setTimeout(cerrarPopup, 3000);
+      setTimeout(cerrarPopup, 7000);
     })
     .catch(function () {
       btn.disabled = false;
