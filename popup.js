@@ -120,6 +120,7 @@
           <div id="incognito-popup-success">
             <h3>¡Gracias! 🎉</h3>
             <p>Te enviamos tu cupón por WhatsApp en instantes.</p>
+            <p>Cuando lo uses, copiá el código completo, no solo el número.</p>
           </div>
         </div>
       </div>
